@@ -1,0 +1,170 @@
+#include <edge.h>
+
+
+
+size_t find_degree_of_graph(Matrix& adj) {
+
+    size_t max_degree = 0, current_degree;
+    for (size_t i = 0; i < adj.get_side_len(); i++) {
+
+        current_degree = 0;
+        for (size_t j = 0; j < adj.get_side_len(); j++) {
+            if (adj[i][j] == 0) continue;
+            current_degree++;
+        }
+
+        if (current_degree > max_degree)
+            max_degree = current_degree;
+    }
+
+    return max_degree;
+}
+
+
+color_t get_available_color(const cmask_t& mask) {
+
+    color_t color;
+    for (color = 0; color < mask.size() and mask[color] == false; color++);
+    return ++color;
+}
+
+
+int get_vertex_by_color(Matrix& cmat, const cmask_t& mask, int base, color_t c) {
+
+    int vertex = -1;
+    if (mask[c - 1] == false) {
+        for (vertex = 0; cmat[base][vertex] != c; vertex++);
+    }
+
+    return vertex;
+}
+
+
+// DEV: recoloring work for 'both directions' of edge
+// TODO(DEV): sync for directed and not graphs
+void color_edge(Matrix& cmat, std::vector<cmask_t>& cmasks, int u, int v, color_t c) {
+
+    color_t current = cmat[u][v];
+    if (current != -1) {
+        cmasks[u][current - 1] = true; 
+        cmasks[v][current - 1] = true; 
+    }
+
+    cmat[u][v] = c;
+    cmat[v][u] = c;
+
+    if (c != -1) { // TODO(DEV): make variable CL from class `cmat`
+        cmasks[u][c - 1] = false;
+        cmasks[v][c - 1] = false;
+    }
+}
+
+
+// DEV: assume that (base, next) = CL
+void build_fan(Matrix& cmat, fan_t& fan, const std::vector<cmask_t>& cmasks, int base, int next) {
+
+    fan.push_back(next); 
+    cmask_t mask, base_mask = cmasks[base];
+   
+    std::unordered_set<color_t> viewed_colors;
+    while (true) {
+        mask = cmasks[next];
+        color_t requested_color = get_available_color(mask);
+
+        next = get_vertex_by_color(cmat, base_mask, base, requested_color);
+        if (next == -1) break;
+
+        fan.push_back(next);
+
+        if (viewed_colors.count(requested_color) != 0) break;
+        viewed_colors.insert(requested_color);
+    }
+}
+
+
+void rotate_fan(Matrix& cmat, std::vector<cmask_t>& cmasks, fan_t& fan, int base, int end, int CL) {
+
+    for (size_t i = 0; i < end; i++)
+        color_edge(cmat, cmasks, base, fan[i], cmat[base][fan[i + 1]]);
+
+    color_edge(cmat, cmasks, base, fan[end], CL);
+}
+
+
+void build_and_inverse_cd_path(Matrix& cmat, std::vector<cmask_t> cmasks, int base, color_t c, color_t d) {
+
+    cmask_t mask = cmasks[base];
+
+    int prev = base, next;
+    base = get_vertex_by_color(cmat, mask, base, d);
+    if (base == -1) return; // MATH: c and d not in base of fan
+
+    int counter = 0;
+    color_t path_colors[2] = {c, d};
+    color_t current_color = path_colors[counter]; 
+
+    while (1) {
+        next = get_vertex_by_color(cmat, mask, base, current_color);
+
+        color_edge(cmat, cmasks, prev, base, current_color);
+        counter = ++counter % 2;
+        current_color = path_colors[counter];
+
+        if (next == -1) break;
+
+        prev = base;
+        base = next;
+    }
+}
+
+
+Matrix color_edges(Matrix& adj) {
+  
+    size_t color_count = 1 + find_degree_of_graph(adj);
+    cmask_t default_colors(color_count, true);
+
+    /* TODO(MATH): Is it 100% that algoritm will use dG + 1 colors? *
+     * (May it use dG colors for some graph? See C3 and P2)         */
+
+    const auto vertex_count = adj.get_side_len();
+    std::vector<cmask_t> cmasks(vertex_count, default_colors);
+
+
+    const int NC = 0; 
+    const int CL = -1;
+    Matrix cmat(vertex_count); 
+    for (size_t i = 0; i < vertex_count; i++) {
+        for (size_t j = 0; j < vertex_count; j++) {
+            cmat[i][j] = adj[i][j] != NC ? CL : NC;
+        }
+    }
+    
+    // TODO(DEV): add copy constructors with fill/replace
+    // TODO(DEV): generalize to better Matrix class to solve NC variable
+
+
+    std::vector<int> fan;
+    for (size_t i = 0; i < vertex_count; i++) {
+        for (size_t j = 0; j < vertex_count; j++) {
+            if (cmat[i][j] == NC or cmat[i][j] != CL) continue;
+
+            build_fan(cmat, fan, cmasks, i, j);
+
+            color_t c = get_available_color(cmasks[i]);
+            color_t d = get_available_color(cmasks[fan.back()]);
+            build_and_inverse_cd_path(cmat, cmasks, i, c, d);
+
+            size_t w = 0;
+            while (get_available_color(cmasks[fan[w]]) != d) { w++; }
+
+            rotate_fan(cmat, cmasks, fan, i, w, CL);
+            color_edge(cmat, cmasks, i, fan[w], d);
+
+            fan.clear();
+        }
+    }
+
+
+    return cmat; 
+}
+

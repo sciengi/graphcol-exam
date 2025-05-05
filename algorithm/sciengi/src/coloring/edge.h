@@ -1,0 +1,26 @@
+#ifndef HPP_COLORING
+#define HPP_COLORING
+
+/* Module provides a functions for coloring graphs */
+
+/* TODO:                                     *
+ * - Add syntax const                        *
+ * - Rework color and edges/vertexes finding */
+
+#include <vector>
+#include <unordered_set>
+
+#include <matrix/matrix.h>
+
+
+
+typedef int color_t;
+typedef std::vector<bool> cmask_t;
+typedef std::vector<int> fan_t;
+
+
+/* Misra & Gries edge coloring algorithm */
+Matrix color_edges(Matrix& adj);
+
+
+#endif
