@@ -84,10 +84,15 @@ void build_fan(Matrix& cmat, fan_t& fan, const std::vector<cmask_t>& cmasks, int
 
 void rotate_fan(Matrix& cmat, std::vector<cmask_t>& cmasks, fan_t& fan, int base, int end, int CL) {
 
-    for (size_t i = 0; i < end; i++)
-        color_edge(cmat, cmasks, base, fan[i], cmat[base][fan[i + 1]]);
+    color_t current_color = cmat[base][fan[end]];
+    color_t new_color = CL;
+    color_edge(cmat, cmasks, base, fan[end], new_color);
 
-    color_edge(cmat, cmasks, base, fan[end], CL);
+    for (int i = end - 1; i >= 0; i--) {  // TODO(DEV): i can be negative if w = end = 0 (fan consist of 1 edge)
+        new_color = current_color;
+        current_color = cmat[base][fan[i]];
+        color_edge(cmat, cmasks, base, fan[i], new_color);
+    }
 }
 
 
