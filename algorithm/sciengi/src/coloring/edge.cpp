@@ -23,7 +23,7 @@ int get_vertex_by_color(matrix& cmat, const cmask_t& mask, int base, color_t c) 
 
 // DEV: recoloring work for 'both directions' of edge
 // TODO(DEV): sync for directed and not graphs
-void color_edge(matrix& cmat, std::vector<cmask_t>& cmasks, int u, int v, color_t c) {
+void color_edge(matrix& cmat, std::vector<cmask_t>& cmasks, int u, int v, color_t c, color_t CL) {
 
     color_t current = cmat[u][v];
     if (current != -1) {
@@ -34,7 +34,7 @@ void color_edge(matrix& cmat, std::vector<cmask_t>& cmasks, int u, int v, color_
     cmat[u][v] = c;
     cmat[v][u] = c;
 
-    if (c != -1) { // TODO(DEV): make variable CL from class `cmat`
+    if (c != CL) { // TODO(DEV): make variable CL from class `cmat`
         cmasks[u][c - 1] = false;
         cmasks[v][c - 1] = false;
     }
@@ -67,17 +67,17 @@ void rotate_fan(matrix& cmat, std::vector<cmask_t>& cmasks, fan_t& fan, int base
 
     color_t current_color = cmat[base][fan[end]];
     color_t new_color = CL;
-    color_edge(cmat, cmasks, base, fan[end], new_color);
+    color_edge(cmat, cmasks, base, fan[end], new_color, CL);
 
     for (int i = end - 1; i >= 0; i--) {  // WARN(DEV): `i` can be negative if w = `end` = 0 (fan consist of 1 edge)
         new_color = current_color;
         current_color = cmat[base][fan[i]];
-        color_edge(cmat, cmasks, base, fan[i], new_color);
+        color_edge(cmat, cmasks, base, fan[i], new_color, CL);
     }
 }
 
 
-void build_and_inverse_cd_path(matrix& cmat, std::vector<cmask_t> cmasks, int base, color_t c, color_t d) {
+void inverse_cd_path(matrix& cmat, std::vector<cmask_t> cmasks, int base, color_t c, color_t d, color_t CL) {
 
     cmask_t mask = cmasks[base];
 
@@ -92,7 +92,7 @@ void build_and_inverse_cd_path(matrix& cmat, std::vector<cmask_t> cmasks, int ba
     while (1) {
         next = get_vertex_by_color(cmat, mask, base, current_color);
 
-        color_edge(cmat, cmasks, prev, base, current_color);
+        color_edge(cmat, cmasks, prev, base, current_color, CL);
         counter = ++counter % 2;
         current_color = path_colors[counter];
 
@@ -126,7 +126,7 @@ matrix color_edges(matrix& adj) {
     }
     
     // TODO(DEV): add copy constructors with fill/replace
-    // TODO(DEV): generalize to better matrix class to solve NC variable
+    // TODO(DEV): generalize to better matrix class to solve NC/CL variable
 
 
     std::vector<int> fan;
@@ -138,13 +138,13 @@ matrix color_edges(matrix& adj) {
 
             color_t c = get_available_color(cmasks[i]);
             color_t d = get_available_color(cmasks[fan.back()]);
-            build_and_inverse_cd_path(cmat, cmasks, i, c, d);
+            inverse_cd_path(cmat, cmasks, i, c, d, CL);
 
             size_t w = 0;
             while (get_available_color(cmasks[fan[w]]) != d) { w++; }
 
             rotate_fan(cmat, cmasks, fan, i, w, CL);
-            color_edge(cmat, cmasks, i, fan[w], d);
+            color_edge(cmat, cmasks, i, fan[w], d, CL);
 
             fan.clear();
         }

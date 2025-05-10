@@ -5,20 +5,43 @@
 
 #include <cstddef>
 #include <iostream>
-
+#include <initializer_list>
 
 
 template<typename T>
 class Matrix {
     private:
         T* m_data;
-        const size_t  m_row_count;
-        const size_t  m_col_count;
+        size_t  m_row_count;
+        size_t  m_col_count;
 
     public:
         Matrix(size_t n, size_t m) 
             : m_row_count(n), m_col_count(m), m_data(new int[n * m]) {}
+
         Matrix(size_t n) : Matrix(n, n) {}
+
+        Matrix(size_t row_len, std::initializer_list<T> data) 
+            : Matrix(data.size() / row_len, row_len) {
+          
+            size_t i = 0;
+            for (auto v : data)
+                m_data[i++] = v;
+        }
+
+        Matrix(const Matrix& mat) 
+            : Matrix(mat.m_row_count, mat.m_col_count) {
+
+            std::copy(mat.m_data, mat.m_data + m_row_count * m_col_count, m_data);
+        };
+
+        Matrix& operator=(const Matrix& mat) {
+            Matrix<T> tmp(mat);
+            std::swap(m_row_count, tmp.m_row_count);
+            std::swap(m_col_count, tmp.m_col_count);
+            std::swap(m_data, tmp.m_data);
+            return *this;
+        }
 
         ~Matrix() { delete[] m_data; }
 
