@@ -1,3 +1,5 @@
 
-add_library(cmg SHARED coloring/edge.cpp)
+file(GLOB_RECURSE SOURCE "*.cpp")
+
+add_library(cmg SHARED ${SOURCE})
 

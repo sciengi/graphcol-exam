@@ -7,11 +7,8 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 
-set(SRC         "src")
-set(M_MATRIX    "${SRC}/matrix")
-set(M_COLORING  "${SRC}/coloring")
-
-include_directories(${SRC} ${M_MATRIX} ${M_COLORING})
+set(SRC "src")
+include_directories(${SRC})
 
 
 add_subdirectory(test)

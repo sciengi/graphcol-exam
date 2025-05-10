@@ -10,6 +10,7 @@
 #include <vector>
 #include <unordered_set>
 
+#include <utils/general.h>
 #include <matrix/matrix.h>
 
 
