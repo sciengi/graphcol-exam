@@ -11,7 +11,11 @@ set(SRC         "src")
 set(M_MATRIX    "${SRC}/matrix")
 set(M_COLORING  "${SRC}/coloring")
 
-file(GLOB_RECURSE SOURCES "${SRC}/*.cpp")
-
 include_directories(${SRC} ${M_MATRIX} ${M_COLORING})
-add_executable(${CMAKE_PROJECT_NAME} ${SOURCES} ${SRC}/main.cpp)
+
+
+add_subdirectory(test)
+add_subdirectory(src)
+
+add_executable(${CMAKE_PROJECT_NAME} demo.cpp)
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE cmg)

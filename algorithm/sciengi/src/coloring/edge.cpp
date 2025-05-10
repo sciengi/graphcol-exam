@@ -2,13 +2,13 @@
 
 
 
-size_t find_degree_of_graph(Matrix& adj) {
+size_t find_degree_of_graph(matrix& adj) {
 
     size_t max_degree = 0, current_degree;
-    for (size_t i = 0; i < adj.get_side_len(); i++) {
+    for (size_t i = 0; i < adj.get_row_count(); i++) {
 
         current_degree = 0;
-        for (size_t j = 0; j < adj.get_side_len(); j++) {
+        for (size_t j = 0; j < adj.get_row_count(); j++) {
             if (adj[i][j] == 0) continue;
             current_degree++;
         }
@@ -29,7 +29,7 @@ color_t get_available_color(const cmask_t& mask) {
 }
 
 
-int get_vertex_by_color(Matrix& cmat, const cmask_t& mask, int base, color_t c) {
+int get_vertex_by_color(matrix& cmat, const cmask_t& mask, int base, color_t c) {
 
     int vertex = -1;
     if (mask[c - 1] == false) {
@@ -42,7 +42,7 @@ int get_vertex_by_color(Matrix& cmat, const cmask_t& mask, int base, color_t c) 
 
 // DEV: recoloring work for 'both directions' of edge
 // TODO(DEV): sync for directed and not graphs
-void color_edge(Matrix& cmat, std::vector<cmask_t>& cmasks, int u, int v, color_t c) {
+void color_edge(matrix& cmat, std::vector<cmask_t>& cmasks, int u, int v, color_t c) {
 
     color_t current = cmat[u][v];
     if (current != -1) {
@@ -61,7 +61,7 @@ void color_edge(Matrix& cmat, std::vector<cmask_t>& cmasks, int u, int v, color_
 
 
 // DEV: assume that (base, next) = CL
-void build_fan(Matrix& cmat, fan_t& fan, const std::vector<cmask_t>& cmasks, int base, int next) {
+void build_fan(matrix& cmat, fan_t& fan, const std::vector<cmask_t>& cmasks, int base, int next) {
 
     fan.push_back(next); 
     cmask_t mask, base_mask = cmasks[base];
@@ -82,13 +82,13 @@ void build_fan(Matrix& cmat, fan_t& fan, const std::vector<cmask_t>& cmasks, int
 }
 
 
-void rotate_fan(Matrix& cmat, std::vector<cmask_t>& cmasks, fan_t& fan, int base, int end, int CL) {
+void rotate_fan(matrix& cmat, std::vector<cmask_t>& cmasks, fan_t& fan, int base, int end, int CL) {
 
     color_t current_color = cmat[base][fan[end]];
     color_t new_color = CL;
     color_edge(cmat, cmasks, base, fan[end], new_color);
 
-    for (int i = end - 1; i >= 0; i--) {  // TODO(DEV): i can be negative if w = end = 0 (fan consist of 1 edge)
+    for (int i = end - 1; i >= 0; i--) {  // WARN(DEV): `i` can be negative if w = `end` = 0 (fan consist of 1 edge)
         new_color = current_color;
         current_color = cmat[base][fan[i]];
         color_edge(cmat, cmasks, base, fan[i], new_color);
@@ -96,7 +96,7 @@ void rotate_fan(Matrix& cmat, std::vector<cmask_t>& cmasks, fan_t& fan, int base
 }
 
 
-void build_and_inverse_cd_path(Matrix& cmat, std::vector<cmask_t> cmasks, int base, color_t c, color_t d) {
+void build_and_inverse_cd_path(matrix& cmat, std::vector<cmask_t> cmasks, int base, color_t c, color_t d) {
 
     cmask_t mask = cmasks[base];
 
@@ -123,7 +123,7 @@ void build_and_inverse_cd_path(Matrix& cmat, std::vector<cmask_t> cmasks, int ba
 }
 
 
-Matrix color_edges(Matrix& adj) {
+matrix color_edges(matrix& adj) {
   
     size_t color_count = 1 + find_degree_of_graph(adj);
     cmask_t default_colors(color_count, true);
@@ -131,13 +131,13 @@ Matrix color_edges(Matrix& adj) {
     /* TODO(MATH): Is it 100% that algoritm will use dG + 1 colors? *
      * (May it use dG colors for some graph? See C3 and P2)         */
 
-    const auto vertex_count = adj.get_side_len();
+    const auto vertex_count = adj.get_row_count();
     std::vector<cmask_t> cmasks(vertex_count, default_colors);
 
 
     const int NC = 0; 
     const int CL = -1;
-    Matrix cmat(vertex_count); 
+    matrix cmat(vertex_count); 
     for (size_t i = 0; i < vertex_count; i++) {
         for (size_t j = 0; j < vertex_count; j++) {
             cmat[i][j] = adj[i][j] != NC ? CL : NC;
@@ -145,7 +145,7 @@ Matrix color_edges(Matrix& adj) {
     }
     
     // TODO(DEV): add copy constructors with fill/replace
-    // TODO(DEV): generalize to better Matrix class to solve NC variable
+    // TODO(DEV): generalize to better matrix class to solve NC variable
 
 
     std::vector<int> fan;

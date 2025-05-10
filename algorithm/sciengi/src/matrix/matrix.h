@@ -1,43 +1,63 @@
 #ifndef HPP_MATRIX
 #define HPP_MATRIX
 
-/* Module provides a Matrix class for representing graphs */
+/* Module provides a part of Matrix class for general purpose */
 
-/* TODO: 
- * - Add template (with constexpr argument for side_len)
- * - Replace pointer by std:array
- * - Add error handling and value checking
- * - Replace int* in operator[] by a span-class
- *   Or check C++20 std::span and C++23 operator[]
- * - Add const operator[]
- */
-
-
+#include <cstddef>
 #include <iostream>
 
 
 
+template<typename T>
 class Matrix {
     private:
-        int* m_data;
-        size_t  m_side_len;
+        T* m_data;
+        const size_t  m_row_count;
+        const size_t  m_col_count;
 
     public:
-        Matrix(size_t n);
-        ~Matrix();
+        Matrix(size_t n, size_t m) 
+            : m_row_count(n), m_col_count(m), m_data(new int[n * m]) {}
+        Matrix(size_t n) : Matrix(n, n) {}
+
+        ~Matrix() { delete[] m_data; }
 
 
-        size_t get_side_len() const;
-
-        int* get_flat();
-
-
-        int* operator[](int index);
+        size_t get_row_count() const { return m_row_count; }
+        size_t get_col_count() const { return m_col_count; }
 
 
+        T* operator[](int index) { return m_data + index * m_col_count; }
 };
 
-std::istream& operator>>(std::istream& stream, Matrix& mat);
-std::ostream& operator<<(std::ostream& stream, Matrix& mat);
+
+typedef Matrix<int> matrix;
+
+
+template<typename T> 
+std::ostream& operator<<(std::ostream& stream, Matrix<T>& mat) {
+    
+    for (size_t i = 0; i < mat.get_row_count(); i++) {
+        for (size_t j = 0; j < mat.get_col_count(); j++) {
+            std::cout << mat[i][j] << ' ';
+        }
+        std::cout << std::endl;
+    }
+
+    return stream;
+}
+
+
+template<typename T> 
+std::istream& operator>>(std::istream& stream, Matrix<T>& mat) {
+
+    for (size_t i = 0; i < mat.get_row_count(); i++) {
+        for (size_t j = 0; j < mat.get_col_count(); j++) {
+            std::cin >> mat[i][j];
+        }
+    }
+
+    return stream;
+}
 
 #endif

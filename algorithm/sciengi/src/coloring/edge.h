@@ -20,7 +20,7 @@ typedef std::vector<int> fan_t;
 
 
 /* Misra & Gries edge coloring algorithm */
-Matrix color_edges(Matrix& adj);
+matrix color_edges(matrix& adj);
 
 
 #endif

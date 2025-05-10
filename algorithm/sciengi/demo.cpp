@@ -15,10 +15,11 @@ int main() {
     size_t side;
     std::cin >> side;
 
-    Matrix adj(side);
+    matrix adj(side, side);
     std::cin >> adj;
-  
-    Matrix colored_adj = color_edges(adj);
+ 
+
+    matrix colored_adj = color_edges(adj);
 
 
     std::cout << "\n'Colored' adjacency matrix:\n" << colored_adj << std::endl;;
