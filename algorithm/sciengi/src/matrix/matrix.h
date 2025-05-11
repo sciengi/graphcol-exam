@@ -51,6 +51,7 @@ class Matrix {
 
 
         T* operator[](int index) { return m_data + index * m_col_count; }
+        const T* operator[](int index) const { return m_data + index * m_col_count; }
 };
 
 
@@ -81,6 +82,24 @@ std::istream& operator>>(std::istream& stream, Matrix<T>& mat) {
     }
 
     return stream;
+}
+
+
+template<typename T>
+bool operator==(const Matrix<T>& lhs, const Matrix<T> rhs) {
+
+    if (lhs.get_col_count() != rhs.get_col_count()
+        or lhs.get_row_count() != rhs.get_row_count())
+        return false;
+
+    for (size_t i = 0; i < lhs.get_row_count(); i++) {
+        for (size_t j = 0; j < lhs.get_col_count(); j++) {
+            if (lhs[i][j] != rhs[i][j])
+                return false;
+        }
+    }
+
+    return true;
 }
 
 #endif

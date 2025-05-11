@@ -77,7 +77,7 @@ void rotate_fan(matrix& cmat, std::vector<cmask_t>& cmasks, fan_t& fan, int base
 }
 
 
-void inverse_cd_path(matrix& cmat, std::vector<cmask_t> cmasks, int base, color_t c, color_t d, color_t CL) {
+void inverse_cd_path(matrix& cmat, std::vector<cmask_t>& cmasks, int base, color_t c, color_t d, color_t CL) {
 
     cmask_t mask = cmasks[base];
 
@@ -90,8 +90,11 @@ void inverse_cd_path(matrix& cmat, std::vector<cmask_t> cmasks, int base, color_
     color_t current_color = path_colors[counter]; 
 
     while (1) {
+        mask = cmasks[base];
         next = get_vertex_by_color(cmat, mask, base, current_color);
 
+        if (next != -1)
+            color_edge(cmat, cmasks, next, base, CL, CL);
         color_edge(cmat, cmasks, prev, base, current_color, CL);
         counter = ++counter % 2;
         current_color = path_colors[counter];

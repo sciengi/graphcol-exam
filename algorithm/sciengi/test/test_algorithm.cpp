@@ -168,11 +168,118 @@ TEST(COLORING, build_fan) {
 
 TEST(COLORING, rotate_fun) {
 
+    const int base = 0;
+    const color_t CL = -1;
+    std::vector<std::tuple<matrix, std::vector<cmask_t>, fan_t, int>> testset = {
+        {
+            matrix(2, {
+                    0, CL,
+                    CL, 0,
+            }), 
+            {
+                {true, true}, 
+                {true, true}, 
+            }, 
+            {1}, 0
+        }, // Not rotated
+        {
+            matrix(4, {
+                    0, CL, 1, 2,
+                    CL, 0, 0, 0,
+                    1,  0, 0, 0,
+                    2,  0, 0, 0
+            }), 
+            {
+                {false, false, true, true}, 
+                {true,  true,  true, true}, 
+                {false, true,  true, true}, 
+                {true,  false, true, true}, 
+            }, 
+            {1, 2, 3}, 2
+        }, // Rotate full fan
+        {
+            matrix(4, {
+                    0, CL, 1, 2,
+                    CL, 0, 0, 0,
+                    1,  0, 0, 0,
+                    2,  0, 0, 0
+            }), 
+            {
+                {false, false, true, true}, 
+                {true,  true,  true, true}, 
+                {false, true,  true, true}, 
+                {true,  false, true, true}, 
+            }, 
+            {1, 2, 3}, 1
+        }, // Rotate part of fan
+    };
+
+    std::vector<color_t> fan_colors;
+    for (auto& [cmat, cmasks, fan, end] : testset) {
+        fan_colors.clear();
+        for (size_t i = 1; i < fan.size(); i++) {
+            fan_colors.push_back(cmat[base][fan[i]]);
+        }
+
+        rotate_fan(cmat, cmasks, fan, base, end, CL);
+        for (size_t i = 0; i < end; i++) {
+            ASSERT_EQ(cmat[base][fan[i]], fan_colors[i]);
+        }
+
+        ASSERT_EQ(cmat[base][fan[end]], CL);
+    }
 }
 
 
 TEST(COLORING, inverse_cd_path) {
 
+    const int base = 0;
+    const color_t a = 1, d = 2, c = 3, b = 4, CL = -1; 
+
+    matrix cmat(3, {
+        0, d, a,
+        d, 0, c,
+        a, c, 0
+    });
+
+    std::vector<cmask_t> cmasks = {
+        {false, false, true,  true},
+        {true,  false, false, true},
+        {false, true,  false, true},
+    };
+
+    matrix cd_cmat(3, {
+        0, c, a,
+        c, 0, d,
+        a, d, 0
+    });
+    
+    std::vector<cmask_t> cd_cmasks = {
+        {false, true,  false, true},
+        {true,  false, false, true},
+        {false, false, true,  true},
+    };
+
+    matrix ab_cmat(3, {
+        0, c, b,
+        c, 0, d,
+        b, d, 0
+    });
+    
+    std::vector<cmask_t> ab_cmasks = {
+        {true, true,  false, false},
+        {true, false, false, true},
+        {true, false, true,  false},
+    };
+
+
+    inverse_cd_path(cmat, cmasks, base, c, d, CL);
+    ASSERT_EQ(cmat, cd_cmat);
+    ASSERT_EQ(cmasks, cd_cmasks);
+
+    inverse_cd_path(cmat, cmasks, base, b, a, CL);
+    ASSERT_EQ(cmat, ab_cmat);
+    ASSERT_EQ(cmasks, ab_cmasks);
 }
 
 
