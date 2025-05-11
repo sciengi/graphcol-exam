@@ -5,6 +5,7 @@
 
 #include <coloring/edge.h>
 
+/* @brief */
 color_t get_available_color(const cmask_t& mask); 
 int get_vertex_by_color(matrix& cmat, const cmask_t& mask, int base, color_t c);
 
