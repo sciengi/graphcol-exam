@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <vector>
 #include <unordered_set>
+#include <utils/general.h>
 
 #include <coloring/edge_tesing.h>
 
@@ -108,6 +109,34 @@ TEST(COLORING, color_edge) {
         // - make easer function or split
         // - add CL to cmask_t as zero?
     }
+}
+
+
+// TODO(DEV): move to utils testing
+TEST(COLORING, edge_coloring_is_correct) {
+
+    const int NC = 0;
+    std::vector<std::pair<matrix, bool>> testset = {
+        {matrix(1, {0}), true},
+        {matrix(3, {0, 1, 2, 1, 0, 3, 2, 3, 0}), true},
+        {matrix(3, {0, 1, 1, 1, 0, 0, 1, 0, 0}), false},
+    };
+
+    for (auto [cmat, expected] : testset)
+        EXPECT_EQ(edge_coloring_is_correct(cmat, NC), expected);
+}
+
+
+TEST(COLORING, find_unique_colors) {
+    const int NC = 0;
+    std::vector<std::pair<matrix, std::unordered_set<int>>> testset = {
+        {matrix(1, {0}), {}},
+        {matrix(3, {0, 1, 2, 1, 0, 3, 2, 3, 0}), {1, 2, 3}},
+        {matrix(3, {0, 1, 1, 1, 0, 0, 1, 0, 0}), {1}},
+    };
+
+    for (auto [cmat, expected] : testset)
+        EXPECT_EQ(find_unique_colors(cmat, NC), expected);
 }
 
 
@@ -284,6 +313,64 @@ TEST(COLORING, inverse_cd_path) {
 
 
 TEST(COLORING, color_edges) {
-    
+   
+    std::vector<matrix> testset = {
+        matrix(1, {0}), // K_1
+        matrix(3, {
+                0, 1, 0,
+                1, 0, 1,
+                0, 1, 0,
+        }), // P_3
+        matrix(3, {
+                0, 1, 1,
+                1, 0, 1,
+                1, 1, 0,
+        }), // C_3
+        matrix(4, {
+                0, 1, 0, 0,
+                1, 0, 1, 0,
+                0, 1, 0, 1,
+                0, 0, 1, 0,
+        }), // P_4
+        matrix(4, {
+                0, 1, 0, 1,
+                1, 0, 1, 0,
+                0, 1, 0, 1,
+                1, 0, 1, 0,
+        }),// C_4
+        matrix(4, {
+                0, 1, 1, 1,
+                1, 0, 0, 0,
+                1, 0, 0, 0,
+                1, 0, 0, 0,
+        }), // T_4
+        matrix(4, {
+                0, 1, 1, 1,
+                1, 0, 1, 1,
+                1, 1, 0, 1,
+                1, 1, 1, 0,
+        }), // K_4
+        matrix(5, {
+                0, 0, 1, 1, 1,
+                0, 0, 1, 1, 1,
+                1, 1, 0, 0, 0,
+                1, 1, 0, 0, 0,
+                1, 1, 0, 0, 0,
+        }), // K_2,3
+    };
+
+    const int NC = 0;
+    for (auto mat : testset) {
+        std::cout << "TEST:" << std::endl;
+        matrix result = color_edges(mat);
+        EXPECT_TRUE(edge_coloring_is_correct(result, NC));
+        std::cout << mat << '\n' << result << std::endl;
+
+        size_t deg = find_degree_of_graph(mat);
+        auto colors = find_unique_colors(result, NC);
+        EXPECT_TRUE(colors.size() <= deg + 1);
+        std::cout << "deg=" << deg << " color_count=" << colors.size() << std::endl; 
+        std::cout << "-------------------" << std::endl;
+    }
 }
 

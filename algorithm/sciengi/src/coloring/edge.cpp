@@ -157,3 +157,32 @@ matrix color_edges(matrix& adj) {
     return cmat; 
 }
 
+
+bool edge_coloring_is_correct(const matrix& cmat, int NC) {
+    
+    std::unordered_set<color_t> used_colors;
+    for (size_t i = 0; i < cmat.get_row_count(); i++) {
+        used_colors.clear();
+        for (size_t j = 0; j < cmat.get_col_count(); j++) {
+            if (cmat[i][j] == NC) continue;
+            if (used_colors.count(cmat[i][j]) != 0) return false;
+            used_colors.insert(cmat[i][j]);
+        }
+    }
+    
+    return true;
+}
+
+
+std::unordered_set<color_t> find_unique_colors(const matrix& cmat, int NC) {
+    
+    std::unordered_set<color_t> used_colors;
+    for (size_t i = 0; i < cmat.get_row_count(); i++) {
+        for (size_t j = 0; j < cmat.get_col_count(); j++) {
+            if (cmat[i][j] == NC) continue;
+            used_colors.insert(cmat[i][j]);
+        }
+    }
+
+    return used_colors;
+}
