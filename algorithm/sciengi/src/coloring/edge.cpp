@@ -41,7 +41,7 @@ void color_edge(matrix& cmat, std::vector<cmask_t>& cmasks, int u, int v, color_
 }
 
 
-// DEV: assume that (base, next) = CL
+// DEV: assume that (base, next) = CL, add assert?
 void build_fan(matrix& cmat, fan_t& fan, const std::vector<cmask_t>& cmasks, int base, int next) {
 
     fan.push_back(next); 
@@ -52,13 +52,13 @@ void build_fan(matrix& cmat, fan_t& fan, const std::vector<cmask_t>& cmasks, int
         mask = cmasks[next];
         color_t requested_color = get_available_color(mask);
 
+        if (viewed_colors.count(requested_color) != 0) break;
+        viewed_colors.insert(requested_color);
+
         next = get_vertex_by_color(cmat, base_mask, base, requested_color);
         if (next == -1) break;
 
         fan.push_back(next);
-
-        if (viewed_colors.count(requested_color) != 0) break;
-        viewed_colors.insert(requested_color);
     }
 }
 

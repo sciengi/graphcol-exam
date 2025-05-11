@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <vector>
+#include <unordered_set>
 
 #include <coloring/edge_tesing.h>
 
@@ -111,7 +112,57 @@ TEST(COLORING, color_edge) {
 
 
 TEST(COLORING, build_fan) {
+   
+    const color_t CL = -1;
+    std::vector<std::tuple<matrix, std::vector<cmask_t>, int, int>> testset = {
+        {
+            matrix(3, {0, CL, 1, CL, 0, 0, 1, 0, 0}), 
+            {
+                {false, true, true}, 
+                {true, true, true},
+                {false, true, true}
+            },
+            0, 1
+        }, // No color conflict
+        {
+            matrix(4, {
+                    0, CL, 1, 2, 
+                    CL, 0, 0, 0, 
+                    1,  0, 0, 0, 
+                    2,  0, 0, 0
+            }), 
+            {
+                {false, false, true, true}, 
+                {true,  true,  true, true}, 
+                {false, true,  true, true}, 
+                {true,  false, true, true}, 
+            },
+            0, 1
+        }, // Color conflict
+    };
 
+    for (auto& [cmat, cmasks, u, v] : testset) {
+        fan_t fan;
+        build_fan(cmat, fan, cmasks, u, v);
+
+        ASSERT_TRUE(not fan.empty());
+        ASSERT_TRUE(fan[0] == v);
+        ASSERT_TRUE(cmat[u][fan[0]] == CL); // Top level problem
+
+        std::unordered_set<color_t> viewed_colors;
+        for (size_t i = 1; i < fan.size(); i++) {
+            color_t fan_edge_color = cmat[u][fan[i]];
+            ASSERT_TRUE(fan_edge_color == get_available_color(cmasks[fan[i - 1]]));  
+            ASSERT_TRUE(viewed_colors.count(fan_edge_color) == 0);
+            viewed_colors.insert(fan_edge_color);
+        }
+        
+        color_t last_fan_edge_color = get_available_color(cmasks[fan.back()]);
+        ASSERT_TRUE(
+                cmasks[u][last_fan_edge_color - 1] == true 
+                or viewed_colors.count(last_fan_edge_color) != 0
+        ); 
+    }
 }
 
 
@@ -126,6 +177,6 @@ TEST(COLORING, inverse_cd_path) {
 
 
 TEST(COLORING, color_edges) {
-
+    
 }
 
