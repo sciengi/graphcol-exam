@@ -7,6 +7,9 @@
 #include <iostream>
 #include <initializer_list>
 
+#include <boost/json.hpp>
+using namespace boost;
+
 
 template<typename T>
 class Matrix {
@@ -54,8 +57,25 @@ class Matrix {
         const T* operator[](int index) const { return m_data + index * m_col_count; }
 };
 
-
 typedef Matrix<int> matrix;
+
+
+// DEV: boost json
+template<typename T> 
+void tag_invoke(json::value_from_tag, json::value& jv, Matrix<T> const& mat) {
+    json::array rows;
+            
+    for (size_t i = 0; i < mat.get_row_count(); i++) {
+        json::array row;
+        for (size_t j = 0; j < mat.get_col_count(); j++) {
+            row.emplace_back(mat[i][j]);
+        }
+            
+        rows.push_back(std::move(row));
+    }
+
+    jv = rows;
+}
 
 
 template<typename T> 

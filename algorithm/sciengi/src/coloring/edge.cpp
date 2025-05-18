@@ -108,7 +108,9 @@ void inverse_cd_path(matrix& cmat, std::vector<cmask_t>& cmasks, int base, color
 
 
 matrix color_edges(matrix& adj) {
-  
+ 
+    auto report = start_report("report.json");
+
     size_t color_count = 1 + find_degree_of_graph(adj);
     cmask_t default_colors(color_count, true);
 
@@ -137,6 +139,8 @@ matrix color_edges(matrix& adj) {
         for (size_t j = 0; j < vertex_count; j++) {
             if (cmat[i][j] == NC or cmat[i][j] != CL) continue;
 
+            add_record(report, cmat, "Step");
+
             build_fan(cmat, fan, cmasks, i, j);
 
             color_t c = get_available_color(cmasks[i]);
@@ -153,6 +157,9 @@ matrix color_edges(matrix& adj) {
         }
     }
 
+
+    add_record(report, cmat, "Finished");
+    finish_report(report);
 
     return cmat; 
 }

@@ -13,6 +13,7 @@
 #include <utils/general.h>
 #include <matrix/matrix.h>
 
+#include <report/reporter.h>
 
 
 typedef int color_t;
