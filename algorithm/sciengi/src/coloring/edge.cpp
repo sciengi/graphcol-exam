@@ -77,7 +77,7 @@ void rotate_fan(matrix& cmat, std::vector<cmask_t>& cmasks, fan_t& fan, int base
 }
 
 
-void inverse_cd_path(matrix& cmat, std::vector<cmask_t>& cmasks, int base, color_t c, color_t d, color_t CL) {
+void build_and_inverse_cd_path(matrix& cmat, std::vector<cmask_t>& cmasks, int base, color_t c, color_t d, color_t CL) {
 
     cmask_t mask = cmasks[base];
 
@@ -128,6 +128,8 @@ matrix color_edges(matrix& adj) {
         }
     }
     
+    // PROT(update, graph, "Дан граф", cmat);
+
     // TODO(DEV): add copy constructors with fill/replace
     // TODO(DEV): generalize to better matrix class to solve NC/CL variable
 
@@ -137,22 +139,36 @@ matrix color_edges(matrix& adj) {
         for (size_t j = 0; j < vertex_count; j++) {
             if (cmat[i][j] == NC or cmat[i][j] != CL) continue;
 
+            // PROT(select, edge, "Выбрано неокрашенное ребро", i, j);
+
             build_fan(cmat, fan, cmasks, i, j);
+            // PROT(select, fan, "Построен максимальный веер", fan, base);
 
             color_t c = get_available_color(cmasks[i]);
             color_t d = get_available_color(cmasks[fan.back()]);
-            inverse_cd_path(cmat, cmasks, i, c, d, CL);
+
+            // build_cd_path(...) -> path
+            // PROT(select, path, "Найден cd-путь", path);
+
+            build_and_inverse_cd_path(cmat, cmasks, i, c, d, CL);
+            // PROT(update, graph, "Путь инвертирован", graph);
 
             size_t w = 0;
             while (get_available_color(cmasks[fan[w]]) != d) { w++; }
+            // PROT(select, vertex, "Освободилась вершина", fan[w]);
 
+            // PROT(select, fan, "Будет повёрнут веер", fan, base);
             rotate_fan(cmat, cmasks, fan, i, w, CL);
+            // PROT(update, graph, "Веер повернут", cmat);
+
             color_edge(cmat, cmasks, i, fan[w], d, CL);
+            // PROT(update, graph, "Покрашено новое ребро!", cmat);
 
             fan.clear();
         }
     }
 
+    // PROT(update, graph, "Ребра графа покрашены!", cmat);
 
     return cmat; 
 }
