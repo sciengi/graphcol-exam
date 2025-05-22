@@ -77,19 +77,24 @@ void rotate_fan(matrix& cmat, std::vector<cmask_t>& cmasks, fan_t& fan, int base
 }
 
 
-void build_and_inverse_cd_path(matrix& cmat, std::vector<cmask_t>& cmasks, int base, color_t c, color_t d, color_t CL) {
+// TODO(DEV): split to function with(for protocoling) and without(main version) `return`
+path_t build_and_inverse_cd_path(matrix& cmat, std::vector<cmask_t>& cmasks, int base, color_t c, color_t d, color_t CL) {
+
+    path_t path = { base };
 
     cmask_t mask = cmasks[base];
 
     int prev = base, next;
     base = get_vertex_by_color(cmat, mask, base, d);
-    if (base == -1) return; // MATH: c and d not in base of fan
+    if (base == -1) return path; // MATH: c and d not in base of fan
 
     int counter = 0;
     color_t path_colors[2] = {c, d};
     color_t current_color = path_colors[counter]; 
 
     while (1) {
+        path.push_back(base);
+
         mask = cmasks[base];
         next = get_vertex_by_color(cmat, mask, base, current_color);
 
@@ -104,6 +109,8 @@ void build_and_inverse_cd_path(matrix& cmat, std::vector<cmask_t>& cmasks, int b
         prev = base;
         base = next;
     }
+
+    return path;
 }
 
 

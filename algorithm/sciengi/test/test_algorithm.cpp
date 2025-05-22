@@ -289,26 +289,33 @@ TEST(COLORING, build_and_inverse_cd_path) {
         {false, false, true,  true},
     };
 
-    matrix ab_cmat(3, {
+    matrix ba_cmat(3, {
         0, c, b,
         c, 0, d,
         b, d, 0
     });
     
-    std::vector<cmask_t> ab_cmasks = {
+    std::vector<cmask_t> ba_cmasks = {
         {true, true,  false, false},
         {true, false, false, true},
         {true, false, true,  false},
     };
 
 
-    build_and_inverse_cd_path(cmat, cmasks, base, c, d, CL);
+    path_t path_cd = {0, 1, 2};
+    path_t path_ba = {0, 2};
+    path_t result;
+
+
+    result = build_and_inverse_cd_path(cmat, cmasks, base, c, d, CL);
+    EXPECT_EQ(path_cd, result);
     ASSERT_EQ(cmat, cd_cmat);
     ASSERT_EQ(cmasks, cd_cmasks);
 
-    build_and_inverse_cd_path(cmat, cmasks, base, b, a, CL);
-    ASSERT_EQ(cmat, ab_cmat);
-    ASSERT_EQ(cmasks, ab_cmasks);
+    result = build_and_inverse_cd_path(cmat, cmasks, base, b, a, CL);
+    EXPECT_EQ(path_ba, result);
+    ASSERT_EQ(cmat, ba_cmat);
+    ASSERT_EQ(cmasks, ba_cmasks);
 }
 
 

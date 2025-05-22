@@ -18,6 +18,7 @@
 typedef int color_t;
 typedef std::vector<bool> cmask_t;
 typedef std::vector<int> fan_t;
+typedef std::vector<int> path_t;
 
 
 /* Misra & Gries edge coloring algorithm */
