@@ -16,7 +16,7 @@ void color_edge(matrix& cmat, std::vector<cmask_t>& cmasks, int u, int v, color_
 
 void build_fan(matrix& cmat, fan_t& fan, const std::vector<cmask_t>& cmasks, int base, int next);
 void rotate_fan(matrix& cmat, std::vector<cmask_t>& cmasks, fan_t& fan, int base, int end, int CL);
-void inverse_cd_path(matrix& cmat, std::vector<cmask_t>& cmasks, int base, color_t c, color_t d, color_t CL);
+path_t build_and_inverse_cd_path(matrix& cmat, std::vector<cmask_t>& cmasks, int base, color_t c, color_t d, color_t CL);
 
 
 #endif

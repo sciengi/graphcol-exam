@@ -14,5 +14,5 @@ include_directories(${SRC})
 add_subdirectory(test)
 add_subdirectory(src)
 
-add_executable(${CMAKE_PROJECT_NAME} demo.cpp)
-target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE cmg)
+add_executable(demo demo.cpp)
+target_link_libraries(demo PRIVATE cmg)

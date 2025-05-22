@@ -77,19 +77,24 @@ void rotate_fan(matrix& cmat, std::vector<cmask_t>& cmasks, fan_t& fan, int base
 }
 
 
-void inverse_cd_path(matrix& cmat, std::vector<cmask_t>& cmasks, int base, color_t c, color_t d, color_t CL) {
+// TODO(DEV): split to function with(for protocoling) and without(main version) `return`
+path_t build_and_inverse_cd_path(matrix& cmat, std::vector<cmask_t>& cmasks, int base, color_t c, color_t d, color_t CL) {
+
+    path_t path = { base };
 
     cmask_t mask = cmasks[base];
 
     int prev = base, next;
     base = get_vertex_by_color(cmat, mask, base, d);
-    if (base == -1) return; // MATH: c and d not in base of fan
+    if (base == -1) return path; // MATH: c and d not in base of fan
 
     int counter = 0;
     color_t path_colors[2] = {c, d};
     color_t current_color = path_colors[counter]; 
 
     while (1) {
+        path.push_back(base);
+
         mask = cmasks[base];
         next = get_vertex_by_color(cmat, mask, base, current_color);
 
@@ -104,6 +109,8 @@ void inverse_cd_path(matrix& cmat, std::vector<cmask_t>& cmasks, int base, color
         prev = base;
         base = next;
     }
+
+    return path;
 }
 
 
@@ -131,28 +138,73 @@ matrix color_edges(matrix& adj) {
     // TODO(DEV): add copy constructors with fill/replace
     // TODO(DEV): generalize to better matrix class to solve NC/CL variable
 
+    using logger::opnames;
+    using logger::targets;
+    log_t lg = logger::start("report.json");
+    
+    logger::log(lg, opnames::UPDATE, targets::GRAPH, 
+                "Дан граф", cmat);
 
-    std::vector<int> fan;
+
+    fan_t fan;
+    path_t path;
     for (size_t i = 0; i < vertex_count; i++) {
         for (size_t j = 0; j < vertex_count; j++) {
             if (cmat[i][j] == NC or cmat[i][j] != CL) continue;
 
+            logger::log(lg, opnames::SELECT, targets::EDGE, 
+                    "Выбрано неокрашенное ребро", i, j);
+
+
             build_fan(cmat, fan, cmasks, i, j);
+
+            logger::log(lg, opnames::SELECT, targets::FAN, 
+                    "Построен максимальный веер", fan, i);
+
 
             color_t c = get_available_color(cmasks[i]);
             color_t d = get_available_color(cmasks[fan.back()]);
-            inverse_cd_path(cmat, cmasks, i, c, d, CL);
+
+            path = build_and_inverse_cd_path(cmat, cmasks, i, c, d, CL);
+
+            logger::log(lg, opnames::SELECT, targets::PATH, 
+                    "Найден cd-путь", path);
+            logger::log(lg, opnames::UPDATE, targets::GRAPH, 
+                    "Путь инвертирован", cmat);
+
 
             size_t w = 0;
             while (get_available_color(cmasks[fan[w]]) != d) { w++; }
+            
+            logger::log(lg, opnames::SELECT, targets::VERTEX, 
+                    "Освободилась вершина", fan[w]);
+
+            fan_t smaller_fan(fan); // DEV: for logging purpose only
+            smaller_fan.resize(w);
+
+            logger::log(lg, opnames::SELECT, targets::FAN, 
+                    "Будет повернут веер", smaller_fan, i);
 
             rotate_fan(cmat, cmasks, fan, i, w, CL);
+
+            logger::log(lg, opnames::UPDATE, targets::GRAPH, 
+                    "Веер повернут", cmat);
+
+
             color_edge(cmat, cmasks, i, fan[w], d, CL);
+            
+            logger::log(lg, opnames::UPDATE, targets::GRAPH, 
+                    "Покрашено новое ребро!", cmat);
+
 
             fan.clear();
         }
     }
 
+    logger::log(lg, opnames::UPDATE, targets::GRAPH, 
+            "Правильная раскраска ребер графа завершена!", cmat);
+
+    logger::finish(lg);
 
     return cmat; 
 }

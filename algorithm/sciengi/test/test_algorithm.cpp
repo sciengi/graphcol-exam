@@ -260,7 +260,7 @@ TEST(COLORING, rotate_fun) {
 }
 
 
-TEST(COLORING, inverse_cd_path) {
+TEST(COLORING, build_and_inverse_cd_path) {
 
     const int base = 0;
     const color_t a = 1, d = 2, c = 3, b = 4, CL = -1; 
@@ -289,26 +289,33 @@ TEST(COLORING, inverse_cd_path) {
         {false, false, true,  true},
     };
 
-    matrix ab_cmat(3, {
+    matrix ba_cmat(3, {
         0, c, b,
         c, 0, d,
         b, d, 0
     });
     
-    std::vector<cmask_t> ab_cmasks = {
+    std::vector<cmask_t> ba_cmasks = {
         {true, true,  false, false},
         {true, false, false, true},
         {true, false, true,  false},
     };
 
 
-    inverse_cd_path(cmat, cmasks, base, c, d, CL);
+    path_t path_cd = {0, 1, 2};
+    path_t path_ba = {0, 2};
+    path_t result;
+
+
+    result = build_and_inverse_cd_path(cmat, cmasks, base, c, d, CL);
+    EXPECT_EQ(path_cd, result);
     ASSERT_EQ(cmat, cd_cmat);
     ASSERT_EQ(cmasks, cd_cmasks);
 
-    inverse_cd_path(cmat, cmasks, base, b, a, CL);
-    ASSERT_EQ(cmat, ab_cmat);
-    ASSERT_EQ(cmasks, ab_cmasks);
+    result = build_and_inverse_cd_path(cmat, cmasks, base, b, a, CL);
+    EXPECT_EQ(path_ba, result);
+    ASSERT_EQ(cmat, ba_cmat);
+    ASSERT_EQ(cmasks, ba_cmasks);
 }
 
 
@@ -374,16 +381,12 @@ TEST(COLORING, color_edges) {
 
     const int NC = 0;
     for (auto mat : testset) {
-        std::cout << "TEST:" << std::endl;
         matrix result = color_edges(mat);
         EXPECT_TRUE(edge_coloring_is_correct(result, NC));
-        std::cout << mat << '\n' << result << std::endl;
 
         size_t deg = find_degree_of_graph(mat);
         auto colors = find_unique_colors(result, NC);
         EXPECT_TRUE(colors.size() <= deg + 1);
-        std::cout << "deg=" << deg << " color_count=" << colors.size() << std::endl; 
-        std::cout << "-------------------" << std::endl;
     }
 }
 

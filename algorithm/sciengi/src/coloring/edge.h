@@ -13,11 +13,13 @@
 #include <utils/general.h>
 #include <matrix/matrix.h>
 
-
-
 typedef int color_t;
 typedef std::vector<bool> cmask_t;
 typedef std::vector<int> fan_t;
+typedef std::vector<int> path_t;
+
+
+#include <logger/logger.h>
 
 
 /* Misra & Gries edge coloring algorithm */
