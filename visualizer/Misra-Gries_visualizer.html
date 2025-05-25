@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Визуализатор алгоритма Мисры-Гриса</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #6b8cae;
+            --accent-color: #ff7e5f;
+            --background-color: #f8f9fa;
+            --card-color: #ffffff;
+            --text-color: #333333;
+            --border-color: #e0e0e0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .panel {
+            background-color: var(--card-color);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .graph-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .graph-container {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: white;
+            padding: 15px;
+            min-height: 300px;
+        }
+        
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        button:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .step-info {
+            padding: 15px;
+            background-color: var(--card-color);
+            border-left: 4px solid var(--accent-color);
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        
+        .node {
+            stroke: white;
+            stroke-width: 2px;
+        }
+        
+        .node.selected {
+            stroke: #ff7e5f !important;
+            stroke-width: 3px !important;
+            filter: drop-shadow(0 0 5px #ff7e5f);
+        }
+        
+        .edge {
+            stroke-width: 2px;
+        }
+        
+        .edge.selected {
+            stroke-width: 4px !important;
+            filter: drop-shadow(0 0 3px #ff7e5f);
+        }
+        
+        .tooltip {
+            position: absolute;
+            padding: 8px 12px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            border-radius: 4px;
+            font-size: 14px;
+            pointer-events: none;
+            z-index: 100;
+            visibility: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Алгоритм Мисры-Гриса</h1>
+        
+        <div class="panel">
+            <div class="controls">
+                <button id="prev-step">◀️ Назад</button>
+                <button id="next-step">Вперед ▶️</button>
+                <div class="step-indicator">
+                    Шаг: <span id="current-step">0</span>/<span id="total-steps">0</span>
+                </div>
+            </div>
+            
+            <div class="step-info">
+                <h3>Описание шага:</h3>
+                <div id="step-description">Загрузите данные для визуализации</div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="graph-section">
+                <div class="graph-container" id="main-graph">
+                    <h3>Основной граф</h3>
+                </div>
+                <div class="graph-container" id="fan-graph">
+                    <h3>Текущий веер</h3>
+                </div>
+                <div class="graph-container" id="path-graph">
+                    <h3>CD-путь</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2>Загрузка данных</h2>
+            <input type="file" id="file-input" accept=".json">
+            <button id="load-file">Загрузить файл</button>
+            <div id="error-message" style="color: red; margin-top: 10px;"></div>
+        </div>
+    </div>
+
+    <div class="tooltip" id="tooltip"></div>
+
+    <script>
+        let currentStep = 0;
+        let stepsData = [];
+        let graphHistory = [];
+        const colorScale = d3.scaleOrdinal()
+  	.range([...d3.schemeCategory10, ...d3.schemeDark2, ...d3.schemeSet1]);
+        
+        const initSvg = (containerId) => {
+            const container = document.getElementById(containerId);
+            const width = container.clientWidth - 30;
+            const height = 300;
+            
+            d3.select(`#${containerId} svg`).remove();
+            
+            return d3.select(`#${containerId}`)
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height);
+        };
+
+        const drawGraph = (svg, matrix, highlights = {}) => {
+            if (!matrix) return;
+            
+            const n = matrix.length;
+            const nodes = Array.from({length: n}, (_, i) => ({
+                id: i,
+                x: svg.attr("width")/2 + Math.cos(i*2*Math.PI/n - Math.PI/2) * 120,
+                y: svg.attr("height")/2 + Math.sin(i*2*Math.PI/n - Math.PI/2) * 120
+            }));
+
+            svg.selectAll("*").remove();
+
+            for (let i = 0; i < n; i++) {
+                for (let j = i; j < n; j++) {
+                    const value = matrix[i][j];
+                    if (value !== 0) {
+                        const edgeId = `${i}-${j}`;
+                        const reverseEdgeId = `${j}-${i}`;
+                        const isSelected = highlights.edge === edgeId || highlights.edge === reverseEdgeId;
+                        
+                        svg.append("line")
+                            .attr("class", `edge ${isSelected ? 'selected' : ''}`)
+                            .attr("x1", nodes[i].x)
+                            .attr("y1", nodes[i].y)
+                            .attr("x2", nodes[j].x)
+                            .attr("y2", nodes[j].y)
+                            .attr("stroke", value > 0 ? colorScale(value) : "#ccc")
+                            .attr("stroke-width", 2);
+                    }
+                }
+            }
+
+            svg.selectAll(".node")
+                .data(nodes)
+                .enter()
+                .append("circle")
+                .attr("class", d => `node ${highlights.vertex === d.id ? 'selected' : ''}`)
+                .attr("cx", d => d.x)
+                .attr("cy", d => d.y)
+                .attr("r", 20)
+                .attr("fill", "#4a6fa5");
+
+            svg.selectAll(".label")
+                .data(nodes)
+                .enter()
+                .append("text")
+                .attr("class", "label")
+                .attr("x", d => d.x)
+                .attr("y", d => d.y)
+                .attr("dy", 5)
+                .attr("text-anchor", "middle")
+                .text(d => d.id + 1)
+                .attr("fill", "white");
+        };
+
+        const drawFan = (svg, fanData, mainMatrix) => {
+            if (!fanData || !mainMatrix) return;
+            
+            const baseNode = fanData[0];
+            const fanNodes = [...new Set(fanData)];
+            const n = mainMatrix.length;
+            
+            const fanMatrix = Array.from({length: n}, () => Array(n).fill(0));
+            
+            fanNodes.slice(1).forEach(node => {
+                const value = mainMatrix[baseNode][node];
+                if (value !== 0) {
+                    fanMatrix[baseNode][node] = value;
+                    fanMatrix[node][baseNode] = value;
+                }
+            });
+
+            drawGraph(svg, fanMatrix, {vertex: baseNode});
+        };
+
+	  const drawPath = (svg, pathData, mainMatrix) => {
+            if (!pathData || !mainMatrix) return;
+            
+            const n = mainMatrix.length;
+            const pathMatrix = Array.from({length: n}, () => Array(n).fill(0));
+            
+            for (let i = 0; i < pathData.length - 1; i++) {
+                const from = pathData[i];
+                const to = pathData[i + 1];
+                if (mainMatrix[from][to] !== 0) {
+                    pathMatrix[from][to] = mainMatrix[from][to];
+                    pathMatrix[to][from] = mainMatrix[to][from];
+                }
+            }
+
+            drawGraph(svg, pathMatrix);
+        };
+
+        const updateVisualization = () => {
+            if (!stepsData.length) return;
+
+            const step = stepsData[currentStep];
+            const mainSvg = initSvg("main-graph");
+            const fanSvg = initSvg("fan-graph");
+            const pathSvg = initSvg("path-graph");
+
+	
+            let highlights = {};
+            
+            if (step.opname === 'select') {
+                switch(step.target) {
+                    case 'vertex':
+                        highlights.vertex = step.data;
+                        break;
+                    case 'edge':
+                        highlights.edge = `${step.data[0]}-${step.data[1]}`;
+                        break;
+                }
+            }
+
+            if (step.opname === 'update') {
+                graphHistory.push(step.data);
+                drawGraph(mainSvg, step.data, highlights);
+            } else {
+                drawGraph(mainSvg, graphHistory[graphHistory.length-1], highlights);
+            }
+
+            if (step.target === 'fan') {
+                const currentGraph = graphHistory[graphHistory.length-1];
+                drawFan(fanSvg, step.data, currentGraph);
+            }
+
+            if (step.target === 'path' && step.data) {
+                const currentGraph = graphHistory[graphHistory.length-1];
+                drawPath(pathSvg, step.data, currentGraph);
+            }
+
+            document.getElementById('current-step').textContent = currentStep + 1;
+            document.getElementById('total-steps').textContent = stepsData.length;
+            document.getElementById('step-description').textContent = step.description;
+        };
+
+        document.getElementById('next-step').addEventListener('click', () => {
+            if (currentStep < stepsData.length - 1) {
+                currentStep++;
+                updateVisualization();
+            }
+        });
+
+        document.getElementById('prev-step').addEventListener('click', () => {
+            if (currentStep > 0) {
+                let prevStep = currentStep - 1;
+                while (prevStep >= 0 && stepsData[prevStep].opname !== 'update') prevStep--;
+                
+                if (prevStep >= 0) {
+                    currentStep = prevStep;
+                    graphHistory = graphHistory.slice(0, prevStep + 1);
+                    updateVisualization();
+                }
+            }
+        });
+
+        document.getElementById('load-file').addEventListener('click', () => {
+            const fileInput = document.getElementById('file-input');
+            const errorMessage = document.getElementById('error-message');
+            
+            if (!fileInput.files.length) {
+                errorMessage.textContent = "Файл не выбран!";
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                try {
+                    stepsData = JSON.parse(e.target.result);
+                    errorMessage.textContent = "";
+                    graphHistory = [];
+                    currentStep = 0;
+                    updateVisualization();
+                } catch (error) {
+                    errorMessage.textContent = `Ошибка загрузки файла: ${error.message}`;
+                }
+            };
+
+            reader.onerror = () => {
+                errorMessage.textContent = "Ошибка чтения файла";
+            };
+
+            reader.readAsText(file);
+        });
+    </script>
+</body>
+</html>
