@@ -180,7 +180,7 @@ matrix color_edges(matrix& adj) {
                     "Освободилась вершина", fan[w]);
 
             fan_t smaller_fan(fan); // DEV: for logging purpose only
-            smaller_fan.resize(w);
+            smaller_fan.resize(w + 1);
 
             logger::log(lg, opnames::SELECT, targets::FAN, 
                     "Будет повернут веер", smaller_fan, i);
