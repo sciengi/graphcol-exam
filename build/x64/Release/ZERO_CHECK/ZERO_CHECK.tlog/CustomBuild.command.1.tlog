@@ -1,0 +1,10 @@
+^D:\LABS_LETI\4 СЕМ\ALT_GRAPH\GRAPHCOL-EXAM\BUILD\CMAKEFILES\42152F87CB14EF9E3FB0066AE08FD233\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-SD:/LABS_LETI/4 сем/Alt_graph/graphcol-exam" "-BD:/LABS_LETI/4 сем/Alt_graph/graphcol-exam/build" --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file "D:/LABS_LETI/4 сем/Alt_graph/graphcol-exam/build/graphcol.sln"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

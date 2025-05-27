@@ -5,7 +5,7 @@
 color_t get_available_color(const cmask_t& mask) {
 
     color_t color;
-    for (color = 0; color < mask.size() and mask[color] == false; color++);
+    for (color = 0; color < mask.size() && mask[color] == false; color++);
     return ++color;
 }
 
@@ -150,7 +150,7 @@ matrix color_edges(matrix& adj) {
     path_t path;
     for (size_t i = 0; i < vertex_count; i++) {
         for (size_t j = 0; j < vertex_count; j++) {
-            if (cmat[i][j] == NC or cmat[i][j] != CL) continue;
+            if (cmat[i][j] == NC || cmat[i][j] != CL) continue;
 
             logger::log(lg, opnames::SELECT, targets::EDGE, 
                     "Выбрано неокрашенное ребро", i, j);

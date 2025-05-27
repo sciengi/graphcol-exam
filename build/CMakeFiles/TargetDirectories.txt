@@ -1,0 +1,4 @@
+D:/LABS_LETI/4 сем/Alt_graph/graphcol-exam/build/CMakeFiles/ALL_BUILD.dir
+D:/LABS_LETI/4 сем/Alt_graph/graphcol-exam/build/CMakeFiles/ZERO_CHECK.dir
+D:/LABS_LETI/4 сем/Alt_graph/graphcol-exam/build/algorithm/sciengi/CMakeFiles/demo.dir
+D:/LABS_LETI/4 сем/Alt_graph/graphcol-exam/build/algorithm/sciengi/src/CMakeFiles/cmg.dir

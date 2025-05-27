@@ -28,7 +28,7 @@ log_t start(const char* filename) {
 
 
 void finish(log_t& lg) {
-    lg.seekp(lg.tellp() - 2L); // DEV: replace comma, see log*
+    lg.seekp(lg.tellp() - static_cast<std::streamoff>(2L)); // DEV: replace comma, see log*
     lg << "\n]";
     lg.close();
 }

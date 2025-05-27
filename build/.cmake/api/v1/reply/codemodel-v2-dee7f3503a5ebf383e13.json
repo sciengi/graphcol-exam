@@ -1,0 +1,504 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1
+					],
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.30"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1
+					]
+				},
+				{
+					"build" : "algorithm/sciengi",
+					"childIndexes" : 
+					[
+						2,
+						3
+					],
+					"jsonFile" : "directory-algorithm.sciengi-Debug-06ced33b6425b11aa750.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.30"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "algorithm/sciengi",
+					"targetIndexes" : 
+					[
+						3
+					]
+				},
+				{
+					"build" : "algorithm/sciengi/test",
+					"jsonFile" : "directory-algorithm.sciengi.test-Debug-f5f9f2457f720ff2111e.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.30"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "algorithm/sciengi/test"
+				},
+				{
+					"build" : "algorithm/sciengi/src",
+					"jsonFile" : "directory-algorithm.sciengi.src-Debug-35bbb7828cce4c6b0b24.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.30"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "algorithm/sciengi/src",
+					"targetIndexes" : 
+					[
+						2
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					],
+					"name" : "graphcol",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "ALL_BUILD::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ALL_BUILD-Debug-95ad01074a8e7a3979a6.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ZERO_CHECK-Debug-7454fafdd68912bb4314.json",
+					"name" : "ZERO_CHECK",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "cmg::@28293aff0ea4cfca0c1a",
+					"jsonFile" : "target-cmg-Debug-7a853042fbfaddc34651.json",
+					"name" : "cmg",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "demo::@f028df4ee907da4156f1",
+					"jsonFile" : "target-demo-Debug-0ed8919088edf348e3b1.json",
+					"name" : "demo",
+					"projectIndex" : 0
+				}
+			]
+		},
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1
+					],
+					"jsonFile" : "directory-.-Release-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.30"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1
+					]
+				},
+				{
+					"build" : "algorithm/sciengi",
+					"childIndexes" : 
+					[
+						2,
+						3
+					],
+					"jsonFile" : "directory-algorithm.sciengi-Release-06ced33b6425b11aa750.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.30"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "algorithm/sciengi",
+					"targetIndexes" : 
+					[
+						3
+					]
+				},
+				{
+					"build" : "algorithm/sciengi/test",
+					"jsonFile" : "directory-algorithm.sciengi.test-Release-f5f9f2457f720ff2111e.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.30"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "algorithm/sciengi/test"
+				},
+				{
+					"build" : "algorithm/sciengi/src",
+					"jsonFile" : "directory-algorithm.sciengi.src-Release-35bbb7828cce4c6b0b24.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.30"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "algorithm/sciengi/src",
+					"targetIndexes" : 
+					[
+						2
+					]
+				}
+			],
+			"name" : "Release",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					],
+					"name" : "graphcol",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "ALL_BUILD::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ALL_BUILD-Release-95ad01074a8e7a3979a6.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ZERO_CHECK-Release-7454fafdd68912bb4314.json",
+					"name" : "ZERO_CHECK",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "cmg::@28293aff0ea4cfca0c1a",
+					"jsonFile" : "target-cmg-Release-5adc44542b3369864db0.json",
+					"name" : "cmg",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "demo::@f028df4ee907da4156f1",
+					"jsonFile" : "target-demo-Release-fb96e1fe96db18974dd0.json",
+					"name" : "demo",
+					"projectIndex" : 0
+				}
+			]
+		},
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1
+					],
+					"jsonFile" : "directory-.-MinSizeRel-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.30"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1
+					]
+				},
+				{
+					"build" : "algorithm/sciengi",
+					"childIndexes" : 
+					[
+						2,
+						3
+					],
+					"jsonFile" : "directory-algorithm.sciengi-MinSizeRel-06ced33b6425b11aa750.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.30"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "algorithm/sciengi",
+					"targetIndexes" : 
+					[
+						3
+					]
+				},
+				{
+					"build" : "algorithm/sciengi/test",
+					"jsonFile" : "directory-algorithm.sciengi.test-MinSizeRel-f5f9f2457f720ff2111e.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.30"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "algorithm/sciengi/test"
+				},
+				{
+					"build" : "algorithm/sciengi/src",
+					"jsonFile" : "directory-algorithm.sciengi.src-MinSizeRel-35bbb7828cce4c6b0b24.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.30"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "algorithm/sciengi/src",
+					"targetIndexes" : 
+					[
+						2
+					]
+				}
+			],
+			"name" : "MinSizeRel",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					],
+					"name" : "graphcol",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "ALL_BUILD::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ALL_BUILD-MinSizeRel-95ad01074a8e7a3979a6.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ZERO_CHECK-MinSizeRel-7454fafdd68912bb4314.json",
+					"name" : "ZERO_CHECK",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "cmg::@28293aff0ea4cfca0c1a",
+					"jsonFile" : "target-cmg-MinSizeRel-9d6e312b6266decf5163.json",
+					"name" : "cmg",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "demo::@f028df4ee907da4156f1",
+					"jsonFile" : "target-demo-MinSizeRel-e3d0f627c0dd9ac7a1c6.json",
+					"name" : "demo",
+					"projectIndex" : 0
+				}
+			]
+		},
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1
+					],
+					"jsonFile" : "directory-.-RelWithDebInfo-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.30"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1
+					]
+				},
+				{
+					"build" : "algorithm/sciengi",
+					"childIndexes" : 
+					[
+						2,
+						3
+					],
+					"jsonFile" : "directory-algorithm.sciengi-RelWithDebInfo-06ced33b6425b11aa750.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.30"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "algorithm/sciengi",
+					"targetIndexes" : 
+					[
+						3
+					]
+				},
+				{
+					"build" : "algorithm/sciengi/test",
+					"jsonFile" : "directory-algorithm.sciengi.test-RelWithDebInfo-f5f9f2457f720ff2111e.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.30"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "algorithm/sciengi/test"
+				},
+				{
+					"build" : "algorithm/sciengi/src",
+					"jsonFile" : "directory-algorithm.sciengi.src-RelWithDebInfo-35bbb7828cce4c6b0b24.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.30"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "algorithm/sciengi/src",
+					"targetIndexes" : 
+					[
+						2
+					]
+				}
+			],
+			"name" : "RelWithDebInfo",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					],
+					"name" : "graphcol",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "ALL_BUILD::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ALL_BUILD-RelWithDebInfo-95ad01074a8e7a3979a6.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ZERO_CHECK-RelWithDebInfo-7454fafdd68912bb4314.json",
+					"name" : "ZERO_CHECK",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "cmg::@28293aff0ea4cfca0c1a",
+					"jsonFile" : "target-cmg-RelWithDebInfo-c0884b01ce530bfe7f47.json",
+					"name" : "cmg",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "demo::@f028df4ee907da4156f1",
+					"jsonFile" : "target-demo-RelWithDebInfo-ee2cc924ddbef0d9f61f.json",
+					"name" : "demo",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "D:/LABS_LETI/4 \u0441\u0435\u043c/Alt_graph/graphcol-exam/build",
+		"source" : "D:/LABS_LETI/4 \u0441\u0435\u043c/Alt_graph/graphcol-exam"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}

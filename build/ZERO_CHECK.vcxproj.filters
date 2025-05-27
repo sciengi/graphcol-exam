@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="D:\LABS_LETI\4 сем\Alt_graph\graphcol-exam\build\CMakeFiles\42152f87cb14ef9e3fb0066ae08fd233\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{8099CD9B-5703-3270-8A34-31F5AC2203D8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

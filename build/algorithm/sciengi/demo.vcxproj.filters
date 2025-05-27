@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="D:\LABS_LETI\4 сем\Alt_graph\graphcol-exam\algorithm\sciengi\demo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\LABS_LETI\4 сем\Alt_graph\graphcol-exam\algorithm\sciengi\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{FE87A659-1BB9-364F-B4AE-9B9413F00510}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
