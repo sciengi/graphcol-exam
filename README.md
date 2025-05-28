@@ -14,13 +14,15 @@
 
 Для запуска визуализатора необходимо открыть в браузере `visualizer/visualizer.html`.
 
-Для сборки алгоритма используется cmake, для чего в корне репозитория подготовлен CMakeLists.txt.
+Для сборки алгоритма используется [cmake](https://cmake.org/), для чего в корне репозитория подготовлен CMakeLists.txt.
+> Пользователь Windows - смотри особую [ветку](https://github.com/sciengi/graphcol-exam/tree/Windows-building-changes)
+
+Для сборки выполнить следующие команды в терминале:
 ```bash
 $ mkdir build
 $ cd build
 $ cmake ..
 $ make
 ```
-
-Запуск демонстрации работы алгоритма: `build/algorithm/sciengi/demo`
+Запуск демонстрации работы алгоритма: `./build/algorithm/sciengi/demo`
 
