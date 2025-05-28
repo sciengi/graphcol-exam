@@ -10,17 +10,19 @@
 
 **Материалы для рецензентов прикреплены в общий файл экзамена!**
 
-### Сборка
+### Сборка (Ветка со сборкой под Windows)
 
 Для запуска визуализатора необходимо открыть в браузере `visualizer/visualizer.html`.
 
-Для сборки алгоритма используется cmake, для чего в корне репозитория подготовлен CMakeLists.txt.
+Для сборки алгоритма используется [cmake](https://cmake.org/), для чего в корне репозитория подготовлен CMakeLists.txt.
 ```bash
 $ mkdir build
 $ cd build
 $ cmake ..
-$ make
+$ cmake --build . --config Release
+$ cd \build\algorithm\sciengi\Release
+$ .\demo.exe # Запуск демонстрации
 ```
 
-Запуск демонстрации работы алгоритма: `build/algorithm/sciengi/demo`
+> Протестировано в стандартной vscode под Windows 10
 
