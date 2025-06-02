@@ -18,8 +18,12 @@ int main() {
         << "Please, enter graph as a row count and adjacency matrix:\n" 
         << "(Use 1 for connections and 0 for not)" << std::endl;
 
-    size_t side;
+    int side;
     std::cin >> side;
+    if (std::cin.fail() || side <= 0) {
+        std::cout << "Failed to recieve data" << std::endl;
+        return 0;
+    }
 
     matrix adj(side, side);
     std::cin >> adj;
