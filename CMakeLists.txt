@@ -7,5 +7,5 @@ project(graphcol VERSION 0.1
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-add_subdirectory(algorithm/sciengi)
+add_subdirectory(algorithm)
 
