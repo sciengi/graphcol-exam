@@ -24,5 +24,4 @@ $ cd build
 $ cmake ..
 $ make
 ```
-Запуск демонстрации работы алгоритма: `./build/algorithm/sciengi/demo`
-
+Запуск демонстрации работы алгоритма: `./build/algorithm/demo`
