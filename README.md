@@ -8,7 +8,7 @@ $ mkdir build
 $ cd build
 $ cmake ..
 $ cmake --build . --config Release
-$ cd \build\algorithm\Release
+$ cd .\algorithm\Release 
 $ .\demo.exe # Запуск демонстрации
 ```
 
